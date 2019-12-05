@@ -16,3 +16,12 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResources([
+    'users' => 'UsersController',
+    'categories' => 'CategoriesController',
+    'passwords' => 'PasswordsController'
+]);
+
+Route::POST('login', 'UsersController@login');
+Route::POST('users', 'UsersController@store');
