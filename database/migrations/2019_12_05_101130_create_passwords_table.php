@@ -17,6 +17,8 @@ class CreatePasswordsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('description');
+            $table->unsignedInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
