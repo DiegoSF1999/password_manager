@@ -26,7 +26,7 @@ class CheckToken
             if($decoded_token[1] == $user->changed)
             {
                 return $next($request);
-                
+
             } else {
                 return response()->json([
                     'message' => "access unavailable"
@@ -41,5 +41,6 @@ class CheckToken
 
       
     }
+
 
 }

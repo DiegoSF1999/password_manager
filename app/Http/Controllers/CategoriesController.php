@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\categories;
+use App\users;
 
 class CategoriesController extends Controller
 {
@@ -12,9 +13,11 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        
+        $categories_inv = new categories();
+
+        return $categories_inv->get_categories($request);
     }
 
     /**
@@ -72,7 +75,27 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $categories_inv = new categories();
+        
+        return $categories_inv->change_patch($request, $id);
+        
+    }
+
+    public function change(Request $request)
+    {
+        $categories_inv = new categories();
+   
+        return $categories_inv->change_post($request);
+        
+    }
+
+    public function remove(Request $request)
+    {
+        $categories_inv = new categories();
+
+        return  $categories_inv->remove_post($request);
+        
     }
 
     /**
@@ -81,8 +104,10 @@ class CategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $categories_inv = new categories();
+
+        return  $categories_inv->remove_patch($request, $id);
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Helpers\Token;
 
+
 class users extends Model
 {
     protected $table = 'users';
@@ -16,7 +17,7 @@ class users extends Model
 
     public function categories()
     {
-        return $this->hasMany('App\Comment', 'user_id', 'id');
+        return $this->hasMany('App\categories', 'user_id', 'id');
     }
 
     public function register(Request $request)
@@ -63,6 +64,18 @@ class users extends Model
         return response()->json([
            'token' => $token
         ], 200);
+    }
+
+    public function get_logged_user(Request $request)
+    {
+        $token_inv = new Token();
+
+        $coded_token = $request->header('token');
+        $decoded_token = $token_inv->decode_token($coded_token);
+
+        $user = users::where('email', $decoded_token[0])->first();
+
+        return $user;
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\passwords;
+use App\categories;
 
 class PasswordsController extends Controller
 {
@@ -12,11 +13,19 @@ class PasswordsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return passwords::all();
+        $passwords_inv = new passwords();
+
+        return $passwords_inv->get_passwords($request);
     }
 
+    public function ordered(Request $request)
+    {
+        $passwords_inv = new passwords();
+
+        return $passwords_inv->get_ordered_passwords($request);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -35,8 +44,11 @@ class PasswordsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $password_inv = new passwords();
+
+        return $password_inv->new($request);
     }
+    
 
     /**
      * Display the specified resource.
@@ -69,7 +81,25 @@ class PasswordsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $password_inv = new passwords();
+   
+        return $password_inv->change_patch($request, $id);
+    }
+
+    public function change(Request $request)
+    {
+        $password_inv = new passwords();
+   
+        return $password_inv->change_post($request);
+        
+    }
+
+    public function remove(Request $request)
+    {
+        $password_inv = new passwords();
+   
+        return $password_inv->remove_post($request);
+        
     }
 
     /**
@@ -78,8 +108,10 @@ class PasswordsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $password_inv = new passwords();
+   
+        return $password_inv->remove_patch($request, $id);
     }
 }
