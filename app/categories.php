@@ -27,15 +27,25 @@ class categories extends Model
 
     public function new(Request $request)
     {
-        $category = new Self();
+        try {
+            $users_inv = new users();
 
-        $category->name = $request->name;
+            $category = new Self();
 
-        $category->user_id = users::where('email', $request->email)->first()->id;
+            $category->name = $request->name;
+    
+            $category->user_id =  $users_inv->get_logged_user($request)->id;
+    
+            $category->save();
+    
+            return $category;
 
-        $category->save();
+        } catch (\Throwable $th) {
+               return response()->json([
+                'message' => "repeated name"
+            ], 401);
+        }
 
-        return $category;
     }
 
     public function change_post(Request $request, $id)
@@ -99,7 +109,7 @@ class categories extends Model
 
     }
 
-    public function remove_patch(Request $request, $id)
+    public function remove_delete(Request $request, $id)
     {
         try {
             $users_inv = new users();

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\categories;
+use App\users;
 
 class passwords extends Model
 {
@@ -22,18 +23,35 @@ class passwords extends Model
 
     public function new(Request $request)
     {
+
         try {
             $password = new Self();
 
             $password->title = $request->title;
             $password->description = $request->description;
-            $password->category_id = $request->category_id;
+
+            $users_inv = new users();
+            $user = $users_inv->get_logged_user($request);
+
+            $category = $user->categories()->find($request->category_id);
+
+            if ($category != null)
+            {
+                $password->category_id = $request->category_id;
     
-            $password->save();
-    
-            return response()->json([
-                'message' => "password created"
-            ], 200);
+                $password->save();
+        
+                return response()->json([
+                    'message' => "password created"
+                ], 200);
+            } else 
+            {
+                return response()->json([
+                    'message' => "category_id did not match"
+                ], 401);
+            }
+
+        
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "category_id did not match"
@@ -44,6 +62,7 @@ class passwords extends Model
 
     public function change_post(Request $request)
     {
+        
         try {
             $users_inv = new users();
             $user = $users_inv->get_logged_user($request);
@@ -53,12 +72,12 @@ class passwords extends Model
     
             if ($request->title != null)
             {
-                $passwords->update(['title' => $request->title]);
+                $password->update(['title' => $request->title]);
             }
     
             if ($request->description != null)
             {
-                $passwords->update(['description' => $request->description]);
+                $password->update(['description' => $request->description]);
             }
     
             return response()->json([
@@ -74,21 +93,30 @@ class passwords extends Model
 
     public function change_patch(Request $request, $id)
     {
+
+     
+
+       
+
         try {
+
             $users_inv = new users();
             $user = $users_inv->get_logged_user($request);
-    
+            
             $category = $user->categories()->find($request->category_id);
+
             $password = $category->passwords()->find($id);
-    
+
+            
             if ($request->title != null)
             {
-                $passwords->update(['title' => $request->title]);
+                $password->update(['title' => $request->title]);
+               
             }
     
             if ($request->description != null)
             {
-                $passwords->update(['description' => $request->description]);
+                $password->update(['description' => $request->description]);
             }
     
             return response()->json([
@@ -124,7 +152,7 @@ class passwords extends Model
 
     }
 
-    public function remove_patch(Request $request, $id)
+    public function remove_delete(Request $request, $id)
     {
         try {
             $users_inv = new users();
@@ -192,9 +220,7 @@ class passwords extends Model
       
                 $category_temp =>  $passwords_temp
                       
-            ); 
-
-            
+            );  
 
             array_push($passwords, $readyforadd);
          

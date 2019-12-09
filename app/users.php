@@ -22,14 +22,21 @@ class users extends Model
 
     public function register(Request $request)
     {
-        $user = new self();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->changed = 0;
-        $user->save();
+        try {
+            $user = new self();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = $request->password;
+            $user->changed = 0;
+            $user->save();
+    
+            return $this->getTokenFromUser($user);        
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "email already used"
+            ], 401);
+        }
 
-        return $this->getTokenFromUser($user);
     }
     public function login(Request $request)
     {

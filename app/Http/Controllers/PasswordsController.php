@@ -112,6 +112,6 @@ class PasswordsController extends Controller
     {
         $password_inv = new passwords();
    
-        return $password_inv->remove_patch($request, $id);
+        return $password_inv->remove_delete($request, $id);
     }
 }

@@ -108,6 +108,6 @@ class CategoriesController extends Controller
     {
         $categories_inv = new categories();
 
-        return  $categories_inv->remove_patch($request, $id);
+        return  $categories_inv->remove_delete($request, $id);
     }
 }
