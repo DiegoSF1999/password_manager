@@ -14,7 +14,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return categories::all();
+        
     }
 
     /**
@@ -35,7 +35,10 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-  
+        $categories_inv = new categories();
+
+        return $categories_inv->new($request);
+
     }
 
     /**

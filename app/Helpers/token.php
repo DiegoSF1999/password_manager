@@ -8,8 +8,8 @@ class Token
     private  $key = 'sfaojdsfjsaFJAJjjoadsjDFHGDsdgdfHDHSgFMFFc3245q435,mmbnZdf?¿YU"24trefvdcfhd';
     public function encode_token($email, $changed)
     {
-        $data_token = array($email, $changed);
-        $token = JWT::encode($data_token, $this->key);
+        $data = array($email, $changed);
+        $token = JWT::encode($data, $this->key);
         return $token;
     }
     public function decode_token($token)

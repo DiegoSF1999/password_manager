@@ -17,11 +17,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResources([
-    'users' => 'UsersController',
-    'categories' => 'CategoriesController',
-    'passwords' => 'PasswordsController'
-]);
+Route::apiResource('users', 'UsersController')->middleware('token');
+Route::apiResource('categories', 'CategoriesController')->middleware('token');
+Route::apiResource('passwords', 'PasswordsController')->middleware('token');
 
 Route::POST('login', 'UsersController@login');
 Route::POST('users', 'UsersController@store');

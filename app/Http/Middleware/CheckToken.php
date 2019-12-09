@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Middleware;
 use Closure;
-use App\User;
+use App\users;
 use App\Helpers\Token;
 class CheckToken
 {
@@ -14,33 +14,32 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-        try {
-            
-            $request_data = getdata($request);
+     try {
 
-     
+            $token_inv = new Token();
 
-            $received_user = User::where('email', $verified_email)->first();
-            $received_email = $received_user->email;
-            if($received_email == $verified_email) {
+            $coded_token = $request->header('token');
+            $decoded_token = $token_inv->decode_token($coded_token);
+
+            $user = users::where('email', $decoded_token[0])->first();
+
+            if($decoded_token[1] == $user->changed)
+            {
                 return $next($request);
+                
+            } else {
+                return response()->json([
+                    'message' => "access unavailable"
+                ], 401);
             }
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => "access unavailable"
-            ], 401);
-        }
+
+         } catch (\Throwable $th) {
+         return response()->json([
+                 'message' => "access unavailable"
+             ], 401);
+         }
 
       
     }
-    private function get_request_data($request)
-    {
-        $token_inv = new Token();
-        $request_token = $request->header('token');
-        $decoded_request_token = $token_inv->decode_token($request_token);
 
-        var_dump($decoded_request_token);exit;
-
-
-    }
 }

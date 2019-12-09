@@ -28,35 +28,41 @@ class users extends Model
         $user->changed = 0;
         $user->save();
 
+        return $this->getTokenFromUser($user);
+    }
+    public function login(Request $request)
+    {
+
+        try {
+
+            $user = self::where('email', $request->email)->first();
+
+           if ($user->password == $request->password)
+           {
+            return $this->getTokenFromUser($user);
+
+           } else {
+            return response()->json([
+                'message' => "wrong data"
+            ], 401);
+           }
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "wrong data"
+            ], 401);
+        }
+        
+
+    }
+
+    private function getTokenFromUser($user)
+    {
         $token_inv = new Token();
         $token = $token_inv->encode_token($user->email, $user->changed);
         return response()->json([
            'token' => $token
         ], 200);
     }
-    public function login(Request $request)
-    {
-        //$data = ['email' => $request->email];
-        $user = self::where('email', $request->email)->first();
-        if ($user) {
-            if ($user->password == $request->password) {
-                //$token = new Token($data);
-                //$encoded_token = $token->set_token($user->email);
-                //return response()->json([
-                 //   'token' => $encoded_token
-                //], 200);
-                return $user;
-            } else {
-                return response()->json([
-                    'message' => "incorrect data"
-                ], 401);
-            }
-        } else {
-            return response()->json([
-                'message' => "incorrect data"
-            ], 401);
-        }
-    }
-
 
 }
